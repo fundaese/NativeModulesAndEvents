@@ -1,41 +1,49 @@
 import React, {Component} from 'react';
 import {
-  View,StyleSheet,Text,Button
+  View,
+  StyleSheet,
+  Text,
+  Button,
+  NativeModules,
+  TouchableOpacity,
+  NativeEventEmitter
 } from 'react-native';
 
-import {NativeModules} from 'react-native';
-
 export default class App extends Component{
-
   constructor(props) {
     super(props);
-   
+
     this.state = {
       batteryLevel: '',
     };
-   }
-
-   getBatteryLevel = (callback) => {
-    NativeModules.BatteryStatus.getBatteryStatus(callback);
-   }
-
-  componentDidMount() {
-    this.getBatteryLevel((batteryLevel) => {
-      console.log("BatteryLevel: ",batteryLevel);  
-      this.setState({ batteryLevel: batteryLevel}); 
-      });
   }
 
-  handleChange() {
-    this.setState({batteryLevel});
+  getBatteryLevel = (callback) => {
+    NativeModules.BatteryStatus.getBatteryStatus(callback);
+  }
+
+  componentDidMount() {
+    this.getBatteryLevel((batteryLevel) => {                                //native module from android           
+      console.log("BatteryLevel: ",batteryLevel);  
+      this.setState({ batteryLevel: batteryLevel}); 
+    })
+
+   const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample); //event listener
+   eventEmitter.addListener('batteryLow', (event) => {
+      alert("LOW BATTERY", event.battery) 
+   })
   }
 
   render(){
   return (
     <View style = {styles.container}>
       <Text style={{color: 'blue', fontSize: 20, fontWeight:'bold'}}>
-       BatteryLevel: {this.state.batteryLevel}
+       BatteryLevel:{this.state.batteryLevel}%
       </Text>
+
+      <TouchableOpacity onPress={() => this.getBatteryLevel.bind().this}>
+          <Text>Add</Text>
+      </TouchableOpacity>
     </View>
   );
 }
