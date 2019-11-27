@@ -29,9 +29,9 @@ export default class App extends Component{
     })
 
    const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample); //event listener
-   eventEmitter.addListener('batteryLow', (event) => {
-      alert("LOW BATTERY", event.battery) 
-   })
+    eventEmitter.addListener('batteryLow', (event) => {
+       alert("Low Battery!", event.battery) 
+    })
   }
 
   render(){
@@ -40,10 +40,6 @@ export default class App extends Component{
       <Text style={{color: 'blue', fontSize: 20, fontWeight:'bold'}}>
        BatteryLevel:{this.state.batteryLevel}%
       </Text>
-
-      <TouchableOpacity onPress={() => this.getBatteryLevel.bind().this}>
-          <Text>Add</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -55,6 +51,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
 });
 
